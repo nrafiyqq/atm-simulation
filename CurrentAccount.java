@@ -2,7 +2,7 @@
 // Inheritance - CurrentAccount extends Account
 public class CurrentAccount extends Account {
     private double overdraftLimit;
-    private static final double WITHDRAWAL_LIMIT = 50000.0;
+    private static final double WITHDRAWAL_LIMIT = 100000.0;
     
     public CurrentAccount(String accountNumber, String accountHolderName, String pin, double balance, double overdraftLimit) {
         super(accountNumber, accountHolderName, pin, balance);

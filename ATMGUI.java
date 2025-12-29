@@ -96,7 +96,7 @@ public class ATMGUI extends JFrame {
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        balanceLabel = new JLabel("Balance: $0.00");
+        balanceLabel = new JLabel("Balance: RM0.00");
         balanceLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         balanceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
@@ -150,7 +150,7 @@ public class ATMGUI extends JFrame {
                 double amount = Double.parseDouble(amountField.getText());
                 Transaction transaction = new WithdrawTransaction(atm.getCurrentAccount(), amount);
                 if (atm.performTransaction(transaction)) {
-                    JOptionPane.showMessageDialog(this, "Withdrawal Successful!\nAmount: $" + amount);
+                    JOptionPane.showMessageDialog(this, "Withdrawal Successful!\nAmount: RM" + amount);
                     updateBalance();
                     amountField.setText("");
                     cardLayout.show(mainPanel, "MENU");
@@ -198,7 +198,7 @@ public class ATMGUI extends JFrame {
                 double amount = Double.parseDouble(amountField.getText());
                 Transaction transaction = new DepositTransaction(atm.getCurrentAccount(), amount);
                 if (atm.performTransaction(transaction)) {
-                    JOptionPane.showMessageDialog(this, "Deposit Successful!\nAmount: $" + amount);
+                    JOptionPane.showMessageDialog(this, "Deposit Successful!\nAmount: RM" + amount);
                     updateBalance();
                     amountField.setText("");
                     cardLayout.show(mainPanel, "MENU");
@@ -268,7 +268,7 @@ public class ATMGUI extends JFrame {
         Transaction transaction = new BalanceInquiry(atm.getCurrentAccount());
         atm.performTransaction(transaction);
         JOptionPane.showMessageDialog(this, 
-            "Current Balance: $" + String.format("%.2f", atm.getCurrentAccount().getBalance()) +
+            "Current Balance: RM" + String.format("%.2f", atm.getCurrentAccount().getBalance()) +
             "\nAccount Type: " + atm.getCurrentAccount().getAccountType());
     }
     
@@ -306,7 +306,7 @@ public class ATMGUI extends JFrame {
     
     private void updateBalance() {
         if (atm.getCurrentAccount() != null) {
-            balanceLabel.setText("Balance: $" + String.format("%.2f", atm.getCurrentAccount().getBalance()));
+            balanceLabel.setText("Balance: RM" + String.format("%.2f", atm.getCurrentAccount().getBalance()));
         }
     }
     
