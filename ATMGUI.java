@@ -1,4 +1,4 @@
-// ATMGUI.java
+//atmgui
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -7,319 +7,556 @@ public class ATMGUI extends JFrame {
     private ATM atm;
     private Bank bank;
     
-    // GUI Components
     private JPanel mainPanel;
     private CardLayout cardLayout;
     
-    // Login Panel Components
     private JTextField accountField;
     private JPasswordField pinField;
     
-    // Main Menu Components
     private JLabel welcomeLabel;
     private JLabel balanceLabel;
     
     public ATMGUI() {
-        bank = new Bank();
-        atm = new ATM(bank);
-        
-        setTitle("ATM Simulation System");
-        setSize(500, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
-        
-        createLoginPanel();
-        createMainMenuPanel();
-        createWithdrawPanel();
-        createDepositPanel();
-        createHistoryPanel();
-        
-        add(mainPanel);
-        cardLayout.show(mainPanel, "LOGIN");
+        try {
+            bank = new Bank();
+            atm = new ATM(bank);
+            
+            setTitle("ATM Simulation System");
+            setSize(500, 600);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setLocationRelativeTo(null);
+            
+            // Add shutdown hook to save data
+            addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    handleShutdown();
+                }
+            });
+            
+            cardLayout = new CardLayout();
+            mainPanel = new JPanel(cardLayout);
+            
+            createLoginPanel();
+            createMainMenuPanel();
+            createWithdrawPanel();
+            createDepositPanel();
+            createHistoryPanel();
+            
+            add(mainPanel);
+            cardLayout.show(mainPanel, "LOGIN");
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, 
+                "Fatal error initializing ATM: " + e.getMessage(), 
+                "Initialization Error", 
+                JOptionPane.ERROR_MESSAGE);
+            System.err.println("Initialization error: " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
     
     private void createLoginPanel() {
-        JPanel loginPanel = new JPanel();
-        loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
-        loginPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        
-        JLabel titleLabel = new JLabel("ATM SYSTEM");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        JLabel accountLabel = new JLabel("Account Number:");
-        accountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        accountField = new JTextField(15);
-        accountField.setMaximumSize(new Dimension(200, 30));
-        
-        JLabel pinLabel = new JLabel("PIN:");
-        pinLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pinField = new JPasswordField(15);
-        pinField.setMaximumSize(new Dimension(200, 30));
-        
-        JButton loginButton = new JButton("Login");
-        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginButton.addActionListener(e -> handleLogin());
-        
-        JLabel infoLabel = new JLabel("<html><center>Sample Accounts:<br>1001/1234 | 2001/5678 | 1002/9999</center></html>");
-        infoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        infoLabel.setForeground(Color.GRAY);
-        
-        loginPanel.add(titleLabel);
-        loginPanel.add(Box.createVerticalStrut(30));
-        loginPanel.add(accountLabel);
-        loginPanel.add(Box.createVerticalStrut(5));
-        loginPanel.add(accountField);
-        loginPanel.add(Box.createVerticalStrut(15));
-        loginPanel.add(pinLabel);
-        loginPanel.add(Box.createVerticalStrut(5));
-        loginPanel.add(pinField);
-        loginPanel.add(Box.createVerticalStrut(20));
-        loginPanel.add(loginButton);
-        loginPanel.add(Box.createVerticalStrut(30));
-        loginPanel.add(infoLabel);
-        
-        mainPanel.add(loginPanel, "LOGIN");
+        try {
+            JPanel loginPanel = new JPanel();
+            loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
+            loginPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+            
+            JLabel titleLabel = new JLabel("ATM SYSTEM");
+            titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+            titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            JLabel accountLabel = new JLabel("Account Number:");
+            accountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            accountField = new JTextField(15);
+            accountField.setMaximumSize(new Dimension(200, 30));
+            
+            JLabel pinLabel = new JLabel("PIN:");
+            pinLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            pinField = new JPasswordField(15);
+            pinField.setMaximumSize(new Dimension(200, 30));
+            
+            JButton loginButton = new JButton("Login");
+            loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            loginButton.addActionListener(e -> handleLogin());
+            
+            JLabel infoLabel = new JLabel("<html><center>Sample Accounts:<br>1001/1234 | 2001/5678 | 1002/9999</center></html>");
+            infoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            infoLabel.setForeground(Color.GRAY);
+            
+            loginPanel.add(titleLabel);
+            loginPanel.add(Box.createVerticalStrut(30));
+            loginPanel.add(accountLabel);
+            loginPanel.add(Box.createVerticalStrut(5));
+            loginPanel.add(accountField);
+            loginPanel.add(Box.createVerticalStrut(15));
+            loginPanel.add(pinLabel);
+            loginPanel.add(Box.createVerticalStrut(5));
+            loginPanel.add(pinField);
+            loginPanel.add(Box.createVerticalStrut(20));
+            loginPanel.add(loginButton);
+            loginPanel.add(Box.createVerticalStrut(30));
+            loginPanel.add(infoLabel);
+            
+            mainPanel.add(loginPanel, "LOGIN");
+            
+        } catch (Exception e) {
+            System.err.println("Error creating login panel: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private void createMainMenuPanel() {
-        JPanel menuPanel = new JPanel(new BorderLayout());
-        
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
-        welcomeLabel = new JLabel("Welcome!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        balanceLabel = new JLabel("Balance: RM0.00");
-        balanceLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-        balanceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        topPanel.add(welcomeLabel);
-        topPanel.add(Box.createVerticalStrut(10));
-        topPanel.add(balanceLabel);
-        
-        JPanel buttonPanel = new JPanel(new GridLayout(5, 1, 10, 10));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
-        
-        JButton withdrawButton = new JButton("Withdraw");
-        JButton depositButton = new JButton("Deposit");
-        JButton balanceButton = new JButton("Check Balance");
-        JButton historyButton = new JButton("Transaction History");
-        JButton logoutButton = new JButton("Logout");
-        
-        withdrawButton.addActionListener(e -> cardLayout.show(mainPanel, "WITHDRAW"));
-        depositButton.addActionListener(e -> cardLayout.show(mainPanel, "DEPOSIT"));
-        balanceButton.addActionListener(e -> handleBalanceInquiry());
-        historyButton.addActionListener(e -> showHistory());
-        logoutButton.addActionListener(e -> handleLogout());
-        
-        buttonPanel.add(withdrawButton);
-        buttonPanel.add(depositButton);
-        buttonPanel.add(balanceButton);
-        buttonPanel.add(historyButton);
-        buttonPanel.add(logoutButton);
-        
-        menuPanel.add(topPanel, BorderLayout.NORTH);
-        menuPanel.add(buttonPanel, BorderLayout.CENTER);
-        
-        mainPanel.add(menuPanel, "MENU");
+        try {
+            JPanel menuPanel = new JPanel(new BorderLayout());
+            
+            JPanel topPanel = new JPanel();
+            topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+            topPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            
+            welcomeLabel = new JLabel("Welcome!");
+            welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            balanceLabel = new JLabel("Balance: $0.00");
+            balanceLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+            balanceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            topPanel.add(welcomeLabel);
+            topPanel.add(Box.createVerticalStrut(10));
+            topPanel.add(balanceLabel);
+            
+            JPanel buttonPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+            buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+            
+            JButton withdrawButton = new JButton("Withdraw");
+            JButton depositButton = new JButton("Deposit");
+            JButton balanceButton = new JButton("Check Balance");
+            JButton historyButton = new JButton("Transaction History");
+            JButton logoutButton = new JButton("Logout");
+            
+            withdrawButton.addActionListener(e -> cardLayout.show(mainPanel, "WITHDRAW"));
+            depositButton.addActionListener(e -> cardLayout.show(mainPanel, "DEPOSIT"));
+            balanceButton.addActionListener(e -> handleBalanceInquiry());
+            historyButton.addActionListener(e -> showHistory());
+            logoutButton.addActionListener(e -> handleLogout());
+            
+            buttonPanel.add(withdrawButton);
+            buttonPanel.add(depositButton);
+            buttonPanel.add(balanceButton);
+            buttonPanel.add(historyButton);
+            buttonPanel.add(logoutButton);
+            
+            menuPanel.add(topPanel, BorderLayout.NORTH);
+            menuPanel.add(buttonPanel, BorderLayout.CENTER);
+            
+            mainPanel.add(menuPanel, "MENU");
+            
+        } catch (Exception e) {
+            System.err.println("Error creating menu panel: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private void createWithdrawPanel() {
-        JPanel withdrawPanel = new JPanel();
-        withdrawPanel.setLayout(new BoxLayout(withdrawPanel, BoxLayout.Y_AXIS));
-        withdrawPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        
-        JLabel titleLabel = new JLabel("Withdraw Money");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        JTextField amountField = new JTextField(15);
-        amountField.setMaximumSize(new Dimension(200, 30));
-        
-        JButton submitButton = new JButton("Withdraw");
-        submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        submitButton.addActionListener(e -> {
-            try {
-                double amount = Double.parseDouble(amountField.getText());
-                Transaction transaction = new WithdrawTransaction(atm.getCurrentAccount(), amount);
-                if (atm.performTransaction(transaction)) {
-                    JOptionPane.showMessageDialog(this, "Withdrawal Successful!\nAmount: RM" + amount);
-                    updateBalance();
-                    amountField.setText("");
-                    cardLayout.show(mainPanel, "MENU");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Withdrawal Failed! Insufficient funds or exceeds limit.", "Error", JOptionPane.ERROR_MESSAGE);
+        try {
+            JPanel withdrawPanel = new JPanel();
+            withdrawPanel.setLayout(new BoxLayout(withdrawPanel, BoxLayout.Y_AXIS));
+            withdrawPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+            
+            JLabel titleLabel = new JLabel("Withdraw Money");
+            titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            JTextField amountField = new JTextField(15);
+            amountField.setMaximumSize(new Dimension(200, 30));
+            
+            JButton submitButton = new JButton("Withdraw");
+            submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            submitButton.addActionListener(e -> {
+                try {
+                    String amountText = amountField.getText().trim();
+                    
+                    if (amountText.isEmpty()) {
+                        throw new IllegalArgumentException("Please enter an amount");
+                    }
+                    
+                    double amount = Double.parseDouble(amountText);
+                    
+                    if (amount <= 0) {
+                        throw new IllegalArgumentException("Amount must be positive");
+                    }
+                    
+                    if (atm.getCurrentAccount() == null) {
+                        throw new IllegalStateException("No account logged in");
+                    }
+                    
+                    Transaction transaction = new WithdrawTransaction(atm.getCurrentAccount(), amount);
+                    
+                    if (atm.performTransaction(transaction)) {
+                        JOptionPane.showMessageDialog(this, 
+                            String.format("Withdrawal Successful!\nAmount: $%.2f", amount),
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                        updateBalance();
+                        amountField.setText("");
+                        cardLayout.show(mainPanel, "MENU");
+                    } else {
+                        throw new RuntimeException("Withdrawal Failed! Insufficient funds or exceeds limit.");
+                    }
+                    
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Invalid amount! Please enter a valid number.", 
+                        "Input Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                    System.err.println("Number format error: " + ex.getMessage());
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(), 
+                        "Validation Error", 
+                        JOptionPane.WARNING_MESSAGE);
+                } catch (IllegalStateException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(), 
+                        "State Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                } catch (RuntimeException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(), 
+                        "Transaction Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Unexpected error: " + ex.getMessage(), 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
                 }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid amount!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        
-        JButton backButton = new JButton("Back");
-        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backButton.addActionListener(e -> cardLayout.show(mainPanel, "MENU"));
-        
-        withdrawPanel.add(titleLabel);
-        withdrawPanel.add(Box.createVerticalStrut(30));
-        withdrawPanel.add(new JLabel("Enter Amount:"));
-        withdrawPanel.add(Box.createVerticalStrut(5));
-        withdrawPanel.add(amountField);
-        withdrawPanel.add(Box.createVerticalStrut(20));
-        withdrawPanel.add(submitButton);
-        withdrawPanel.add(Box.createVerticalStrut(10));
-        withdrawPanel.add(backButton);
-        
-        mainPanel.add(withdrawPanel, "WITHDRAW");
+            });
+            
+            JButton backButton = new JButton("Back");
+            backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            backButton.addActionListener(e -> cardLayout.show(mainPanel, "MENU"));
+            
+            withdrawPanel.add(titleLabel);
+            withdrawPanel.add(Box.createVerticalStrut(30));
+            withdrawPanel.add(new JLabel("Enter Amount:"));
+            withdrawPanel.add(Box.createVerticalStrut(5));
+            withdrawPanel.add(amountField);
+            withdrawPanel.add(Box.createVerticalStrut(20));
+            withdrawPanel.add(submitButton);
+            withdrawPanel.add(Box.createVerticalStrut(10));
+            withdrawPanel.add(backButton);
+            
+            mainPanel.add(withdrawPanel, "WITHDRAW");
+            
+        } catch (Exception e) {
+            System.err.println("Error creating withdraw panel: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private void createDepositPanel() {
-        JPanel depositPanel = new JPanel();
-        depositPanel.setLayout(new BoxLayout(depositPanel, BoxLayout.Y_AXIS));
-        depositPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        
-        JLabel titleLabel = new JLabel("Deposit Money");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        JTextField amountField = new JTextField(15);
-        amountField.setMaximumSize(new Dimension(200, 30));
-        
-        JButton submitButton = new JButton("Deposit");
-        submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        submitButton.addActionListener(e -> {
-            try {
-                double amount = Double.parseDouble(amountField.getText());
-                Transaction transaction = new DepositTransaction(atm.getCurrentAccount(), amount);
-                if (atm.performTransaction(transaction)) {
-                    JOptionPane.showMessageDialog(this, "Deposit Successful!\nAmount: RM" + amount);
-                    updateBalance();
-                    amountField.setText("");
-                    cardLayout.show(mainPanel, "MENU");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Deposit Failed!", "Error", JOptionPane.ERROR_MESSAGE);
+        try {
+            JPanel depositPanel = new JPanel();
+            depositPanel.setLayout(new BoxLayout(depositPanel, BoxLayout.Y_AXIS));
+            depositPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+            
+            JLabel titleLabel = new JLabel("Deposit Money");
+            titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            
+            JTextField amountField = new JTextField(15);
+            amountField.setMaximumSize(new Dimension(200, 30));
+            
+            JButton submitButton = new JButton("Deposit");
+            submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            submitButton.addActionListener(e -> {
+                try {
+                    String amountText = amountField.getText().trim();
+                    
+                    if (amountText.isEmpty()) {
+                        throw new IllegalArgumentException("Please enter an amount");
+                    }
+                    
+                    double amount = Double.parseDouble(amountText);
+                    
+                    if (amount <= 0) {
+                        throw new IllegalArgumentException("Amount must be positive");
+                    }
+                    
+                    if (atm.getCurrentAccount() == null) {
+                        throw new IllegalStateException("No account logged in");
+                    }
+                    
+                    Transaction transaction = new DepositTransaction(atm.getCurrentAccount(), amount);
+                    
+                    if (atm.performTransaction(transaction)) {
+                        JOptionPane.showMessageDialog(this, 
+                            String.format("Deposit Successful!\nAmount: $%.2f", amount),
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                        updateBalance();
+                        amountField.setText("");
+                        cardLayout.show(mainPanel, "MENU");
+                    } else {
+                        throw new RuntimeException("Deposit Failed!");
+                    }
+                    
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Invalid amount! Please enter a valid number.", 
+                        "Input Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(), 
+                        "Validation Error", 
+                        JOptionPane.WARNING_MESSAGE);
+                } catch (IllegalStateException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(), 
+                        "State Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                } catch (RuntimeException ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        ex.getMessage(), 
+                        "Transaction Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Unexpected error: " + ex.getMessage(), 
+                        "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
                 }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid amount!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        
-        JButton backButton = new JButton("Back");
-        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backButton.addActionListener(e -> cardLayout.show(mainPanel, "MENU"));
-        
-        depositPanel.add(titleLabel);
-        depositPanel.add(Box.createVerticalStrut(30));
-        depositPanel.add(new JLabel("Enter Amount:"));
-        depositPanel.add(Box.createVerticalStrut(5));
-        depositPanel.add(amountField);
-        depositPanel.add(Box.createVerticalStrut(20));
-        depositPanel.add(submitButton);
-        depositPanel.add(Box.createVerticalStrut(10));
-        depositPanel.add(backButton);
-        
-        mainPanel.add(depositPanel, "DEPOSIT");
+            });
+            
+            JButton backButton = new JButton("Back");
+            backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            backButton.addActionListener(e -> cardLayout.show(mainPanel, "MENU"));
+            
+            depositPanel.add(titleLabel);
+            depositPanel.add(Box.createVerticalStrut(30));
+            depositPanel.add(new JLabel("Enter Amount:"));
+            depositPanel.add(Box.createVerticalStrut(5));
+            depositPanel.add(amountField);
+            depositPanel.add(Box.createVerticalStrut(20));
+            depositPanel.add(submitButton);
+            depositPanel.add(Box.createVerticalStrut(10));
+            depositPanel.add(backButton);
+            
+            mainPanel.add(depositPanel, "DEPOSIT");
+            
+        } catch (Exception e) {
+            System.err.println("Error creating deposit panel: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private void createHistoryPanel() {
-        JPanel historyPanel = new JPanel(new BorderLayout());
-        historyPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
-        JLabel titleLabel = new JLabel("Transaction History", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        
-        JTextArea historyArea = new JTextArea();
-        historyArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(historyArea);
-        
-        JButton backButton = new JButton("Back to Menu");
-        backButton.addActionListener(e -> cardLayout.show(mainPanel, "MENU"));
-        
-        historyPanel.add(titleLabel, BorderLayout.NORTH);
-        historyPanel.add(scrollPane, BorderLayout.CENTER);
-        historyPanel.add(backButton, BorderLayout.SOUTH);
-        
-        mainPanel.add(historyPanel, "HISTORY");
+        try {
+            JPanel historyPanel = new JPanel(new BorderLayout());
+            historyPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            
+            JLabel titleLabel = new JLabel("Transaction History", SwingConstants.CENTER);
+            titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            
+            JTextArea historyArea = new JTextArea();
+            historyArea.setEditable(false);
+            JScrollPane scrollPane = new JScrollPane(historyArea);
+            
+            JButton backButton = new JButton("Back to Menu");
+            backButton.addActionListener(e -> cardLayout.show(mainPanel, "MENU"));
+            
+            historyPanel.add(titleLabel, BorderLayout.NORTH);
+            historyPanel.add(scrollPane, BorderLayout.CENTER);
+            historyPanel.add(backButton, BorderLayout.SOUTH);
+            
+            mainPanel.add(historyPanel, "HISTORY");
+            
+        } catch (Exception e) {
+            System.err.println("Error creating history panel: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private void handleLogin() {
-        String accountNumber = accountField.getText();
-        String pin = new String(pinField.getPassword());
-        
-        if (atm.login(accountNumber, pin)) {
-            Account account = atm.getCurrentAccount();
-            welcomeLabel.setText("Welcome, " + account.getAccountHolderName() + "!");
-            updateBalance();
-            accountField.setText("");
-            pinField.setText("");
-            cardLayout.show(mainPanel, "MENU");
-        } else {
-            JOptionPane.showMessageDialog(this, "Invalid Account Number or PIN!", "Login Failed", JOptionPane.ERROR_MESSAGE);
+        try {
+            String accountNumber = accountField.getText().trim();
+            String pin = new String(pinField.getPassword());
+            
+            if (accountNumber.isEmpty()) {
+                throw new IllegalArgumentException("Please enter account number");
+            }
+            
+            if (pin.isEmpty()) {
+                throw new IllegalArgumentException("Please enter PIN");
+            }
+            
+            if (atm.login(accountNumber, pin)) {
+                Account account = atm.getCurrentAccount();
+                
+                if (account == null) {
+                    throw new IllegalStateException("Login succeeded but account is null");
+                }
+                
+                welcomeLabel.setText("Welcome, " + account.getAccountHolderName() + "!");
+                updateBalance();
+                accountField.setText("");
+                pinField.setText("");
+                cardLayout.show(mainPanel, "MENU");
+            } else {
+                throw new SecurityException("Invalid Account Number or PIN!");
+            }
+            
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, 
+                ex.getMessage(), 
+                "Input Error", 
+                JOptionPane.WARNING_MESSAGE);
+        } catch (SecurityException ex) {
+            JOptionPane.showMessageDialog(this, 
+                ex.getMessage(), 
+                "Login Failed", 
+                JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Unexpected login error: " + ex.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
     }
     
     private void handleBalanceInquiry() {
-        Transaction transaction = new BalanceInquiry(atm.getCurrentAccount());
-        atm.performTransaction(transaction);
-        JOptionPane.showMessageDialog(this, 
-            "Current Balance: RM" + String.format("%.2f", atm.getCurrentAccount().getBalance()) +
-            "\nAccount Type: " + atm.getCurrentAccount().getAccountType());
+        try {
+            if (atm.getCurrentAccount() == null) {
+                throw new IllegalStateException("No account logged in");
+            }
+            
+            Transaction transaction = new BalanceInquiry(atm.getCurrentAccount());
+            atm.performTransaction(transaction);
+            
+            JOptionPane.showMessageDialog(this, 
+                String.format("Current Balance: $%.2f\nAccount Type: %s", 
+                    atm.getCurrentAccount().getBalance(),
+                    atm.getCurrentAccount().getAccountType()),
+                "Balance Inquiry",
+                JOptionPane.INFORMATION_MESSAGE);
+                
+        } catch (IllegalStateException ex) {
+            JOptionPane.showMessageDialog(this, 
+                ex.getMessage(), 
+                "State Error", 
+                JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Error checking balance: " + ex.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
     }
     
     private void showHistory() {
-        java.util.List<String> history = atm.getTransactionHistory();
-        JTextArea historyArea = new JTextArea();
-        
-        for (Component comp : mainPanel.getComponents()) {
-            if (mainPanel.getComponent(mainPanel.getComponentCount() - 1) == comp) {
-                if (comp instanceof JPanel) {
-                    JPanel panel = (JPanel) comp;
-                    for (Component inner : panel.getComponents()) {
-                        if (inner instanceof JScrollPane) {
-                            JScrollPane scroll = (JScrollPane) inner;
-                            historyArea = (JTextArea) scroll.getViewport().getView();
-                            break;
+        try {
+            java.util.List<String> history = atm.getTransactionHistory();
+            JTextArea historyArea = new JTextArea();
+            
+            for (Component comp : mainPanel.getComponents()) {
+                if (mainPanel.getComponent(mainPanel.getComponentCount() - 1) == comp) {
+                    if (comp instanceof JPanel) {
+                        JPanel panel = (JPanel) comp;
+                        for (Component inner : panel.getComponents()) {
+                            if (inner instanceof JScrollPane) {
+                                JScrollPane scroll = (JScrollPane) inner;
+                                historyArea = (JTextArea) scroll.getViewport().getView();
+                                break;
+                            }
                         }
                     }
                 }
             }
-        }
-        
-        if (history.isEmpty()) {
-            historyArea.setText("No transactions yet.");
-        } else {
-            StringBuilder sb = new StringBuilder();
-            for (String trans : history) {
-                sb.append(trans).append("\n");
+            
+            if (history.isEmpty()) {
+                historyArea.setText("No transactions yet.");
+            } else {
+                StringBuilder sb = new StringBuilder();
+                for (String trans : history) {
+                    sb.append(trans).append("\n");
+                }
+                historyArea.setText(sb.toString());
             }
-            historyArea.setText(sb.toString());
+            
+            cardLayout.show(mainPanel, "HISTORY");
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Error loading transaction history: " + ex.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
-        
-        cardLayout.show(mainPanel, "HISTORY");
     }
     
     private void updateBalance() {
-        if (atm.getCurrentAccount() != null) {
-            balanceLabel.setText("Balance: RM" + String.format("%.2f", atm.getCurrentAccount().getBalance()));
+        try {
+            if (atm.getCurrentAccount() != null) {
+                balanceLabel.setText(String.format("Balance: $%.2f", 
+                    atm.getCurrentAccount().getBalance()));
+            }
+        } catch (Exception ex) {
+            System.err.println("Error updating balance: " + ex.getMessage());
         }
     }
     
     private void handleLogout() {
-        atm.logout();
-        cardLayout.show(mainPanel, "LOGIN");
-        JOptionPane.showMessageDialog(this, "Logged out successfully!");
+        try {
+            atm.logout();
+            cardLayout.show(mainPanel, "LOGIN");
+            JOptionPane.showMessageDialog(this, "Logged out successfully!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Error during logout: " + ex.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void handleShutdown() {
+        try {
+            System.out.println("Application shutting down...");
+            bank.shutdown(); // Save all data to files
+            System.out.println("Shutdown complete.");
+        } catch (Exception ex) {
+            System.err.println("Error during shutdown: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
     
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ATMGUI gui = new ATMGUI();
-            gui.setVisible(true);
-        });
+        try {
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    ATMGUI gui = new ATMGUI();
+                    gui.setVisible(true);
+                } catch (Exception e) {
+                    System.err.println("Fatal error creating GUI: " + e.getMessage());
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, 
+                        "Fatal error starting ATM application: " + e.getMessage(),
+                        "Fatal Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    System.exit(1);
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("Fatal error in main: " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }
