@@ -81,10 +81,11 @@ public class ATMGUI extends JFrame {
             loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             loginButton.addActionListener(e -> handleLogin());
             
-            JLabel infoLabel = new JLabel("<html><center>Sample Accounts:<br>1001/1234 | 2001/5678 | 1002/9999</center></html>");
+            /*JLabel infoLabel = new JLabel("<html><center>Sample Accounts:<br>1001/1234 | 2001/5678 | 1002/9999</center></html>");
             infoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             infoLabel.setForeground(Color.GRAY);
-            
+            */
+
             loginPanel.add(titleLabel);
             loginPanel.add(Box.createVerticalStrut(30));
             loginPanel.add(accountLabel);
@@ -97,7 +98,7 @@ public class ATMGUI extends JFrame {
             loginPanel.add(Box.createVerticalStrut(20));
             loginPanel.add(loginButton);
             loginPanel.add(Box.createVerticalStrut(30));
-            loginPanel.add(infoLabel);
+            //loginPanel.add(infoLabel);
             
             mainPanel.add(loginPanel, "LOGIN");
             
@@ -119,7 +120,7 @@ public class ATMGUI extends JFrame {
             welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
             welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             
-            balanceLabel = new JLabel("Balance: $0.00");
+            balanceLabel = new JLabel("Balance: Rm 0.00");
             balanceLabel.setFont(new Font("Arial", Font.PLAIN, 16));
             balanceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             
@@ -196,7 +197,7 @@ public class ATMGUI extends JFrame {
                     
                     if (atm.performTransaction(transaction)) {
                         JOptionPane.showMessageDialog(this, 
-                            String.format("Withdrawal Successful!\nAmount: $%.2f", amount),
+                            String.format("Withdrawal Successful!\nAmount: Rm%.2f", amount),
                             "Success",
                             JOptionPane.INFORMATION_MESSAGE);
                         updateBalance();
@@ -295,7 +296,7 @@ public class ATMGUI extends JFrame {
                     
                     if (atm.performTransaction(transaction)) {
                         JOptionPane.showMessageDialog(this, 
-                            String.format("Deposit Successful!\nAmount: $%.2f", amount),
+                            String.format("Deposit Successful!\nAmount: Rm%.2f", amount),
                             "Success",
                             JOptionPane.INFORMATION_MESSAGE);
                         updateBalance();
@@ -441,7 +442,7 @@ public class ATMGUI extends JFrame {
             atm.performTransaction(transaction);
             
             JOptionPane.showMessageDialog(this, 
-                String.format("Current Balance: $%.2f\nAccount Type: %s", 
+                String.format("Current Balance: Rm%.2f\nAccount Type: %s", 
                     atm.getCurrentAccount().getBalance(),
                     atm.getCurrentAccount().getAccountType()),
                 "Balance Inquiry",
@@ -505,7 +506,7 @@ public class ATMGUI extends JFrame {
     private void updateBalance() {
         try {
             if (atm.getCurrentAccount() != null) {
-                balanceLabel.setText(String.format("Balance: $%.2f", 
+                balanceLabel.setText(String.format("Balance: Rm%.2f", 
                     atm.getCurrentAccount().getBalance()));
             }
         } catch (Exception ex) {
