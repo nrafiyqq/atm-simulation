@@ -2,7 +2,7 @@
 // Inheritance - SavingsAccount extends Account
 public class SavingsAccount extends Account {
     private double interestRate;
-    private static final double WITHDRAWAL_LIMIT = 10000.0;
+    private static final double WITHDRAWAL_LIMIT= 10000.0;
     
     public SavingsAccount(String accountNumber, String accountHolderName, String pin, double balance) {
         super(accountNumber, accountHolderName, pin, balance);

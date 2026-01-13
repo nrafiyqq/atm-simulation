@@ -102,7 +102,7 @@ public class Bank {
         }
     }
     
-    // Add new account (bonus feature)
+    /* Add new account (bonus feature)
     public boolean addAccount(Account account) {
         try {
             if (account == null) {
@@ -129,4 +129,5 @@ public class Bank {
             return false;
         }
     }
+        */
 }

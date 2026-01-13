@@ -3,3 +3,8 @@
 2002|2026-01-12 14:31:20 - Deposit: Rm10000.00 - Success
 2002|2026-01-12 14:31:30 - Withdrawal: Rm10000000.00 - Failed
 2002|2026-01-12 14:31:36 - Balance Inquiry: Rm104000.00
+2002|2026-01-13 12:29:21 - Withdrawal: $50000.00 - Failed
+2002|2026-01-13 12:29:29 - Withdrawal: $50000.00 - Failed
+2002|2026-01-13 12:29:37 - Withdrawal: $5000.00 - Success
+2002|2026-01-13 12:29:44 - Withdrawal: $10000.00 - Success
+2002|2026-01-13 18:00:06 - Withdrawal: $1000000.00 - Failed

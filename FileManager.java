@@ -219,21 +219,19 @@ public class FileManager {
         return history;
     }
     
-    // Create sample accounts if no file exists
+    //Create sample accounts if no file exists
     private static HashMap<String, Account> createSampleAccounts() {
         HashMap<String, Account> accounts = new HashMap<>();
         
-        Account acc1 = new SavingsAccount("1001", "John Doe", "1234", 5000.0);
-        Account acc2 = new CurrentAccount("2001", "Jane Smith", "5678", 10000.0, 2000.0);
-        Account acc3 = new SavingsAccount("1002", "Bob Wilson", "9999", 15000.0);
+        Account acc1 = new SavingsAccount("1111", "John Doe", "1234", 5000.0);
         
-        accounts.put("1001", acc1);
-        accounts.put("2001", acc2);
-        accounts.put("1002", acc3);
+        
+        accounts.put("1111", acc1);
         
         // Save sample accounts to file
         saveAccounts(accounts);
         
         return accounts;
     }
+        
 }

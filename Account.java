@@ -1,6 +1,7 @@
 // Account.java
 // Abstract base class for Account - Inheritance & Encapsulation
-public abstract class Account {
+public abstract class Account 
+{
     private String accountNumber;
     private String accountHolderName;
     private String pin;
